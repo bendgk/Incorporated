@@ -20,16 +20,12 @@ def init():
 
 def create_salt():
     alphanum = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    chars = []
+    chars = ""
 
     for i in range(16):
-        chars.append(random.choice(alphanum))
+        chars = chars + random.choice(alphanum)
 
-    b = ""
-    for i in range(len(chars)):
-        b = b + str(chars[i])
-
-    return b
+    return chars
 
 def hash_SHA256(pwd):
     hash_object = hashlib.sha256(pwd)
@@ -38,10 +34,14 @@ def hash_SHA256(pwd):
 
 def create_user(name, pwd):
     if name not in user_info:
+
+        salt = create_salt()
+
         user_info[name] = {
-            'hash': hash_SHA256(pwd),
-            'salt': create_salt(),
+            'hash': hash_SHA256(pwd + salt),
+            'salt': salt,
         }
+
         user_data[name] = {
             'money': 100
         }
